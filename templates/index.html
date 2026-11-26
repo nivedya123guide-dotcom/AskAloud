@@ -6,11 +6,7 @@
 <title>AskAloud</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: Arial, sans-serif;
@@ -26,41 +22,15 @@ header {
     background: white;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #6254d9;
-}
+.logo { font-size: 24px; font-weight: bold; color: #6254d9; }
+.tag { color: #777; font-size: 13px; }
 
-.tag {
-    color: #777;
-    font-size: 13px;
-}
+main { max-width: 900px; margin: 50px auto; padding: 20px; }
 
-main {
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 20px;
-}
-
-.hero {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.hero h1 {
-    font-size: 38px;
-    margin-bottom: 15px;
-}
-
-.hero span {
-    color: #6254d9;
-}
-
-.hero p {
-    color: #697386;
-    line-height: 1.6;
-}
+.hero { text-align: center; margin-bottom: 40px; }
+.hero h1 { font-size: 38px; margin-bottom: 15px; }
+.hero span { color: #6254d9; }
+.hero p { color: #697386; line-height: 1.6; }
 
 .cards {
     display: grid;
@@ -75,15 +45,9 @@ main {
     box-shadow: 0 5px 20px rgba(0,0,0,0.04);
 }
 
-.icon {
-    font-size: 32px;
-    margin-bottom: 18px;
-}
-
-.card h2 {
-    margin-bottom: 12px;
-}
-
+.teacher { background: #f0edff; }
+.icon { font-size: 32px; margin-bottom: 18px; }
+.card h2 { margin-bottom: 12px; }
 .card p {
     color: #697386;
     font-size: 14px;
@@ -112,12 +76,21 @@ button {
     font-weight: bold;
 }
 
-button:hover {
-    background: #5042c2;
+button:hover { background: #5042c2; }
+
+.message {
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
-.teacher {
-    background: #f0edff;
+.class-code {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    color: #6254d9;
+    margin: 12px 0;
 }
 
 footer {
@@ -128,17 +101,10 @@ footer {
 }
 
 @media (max-width: 650px) {
-    .cards {
-        grid-template-columns: 1fr;
-    }
-
-    .hero h1 {
-        font-size: 30px;
-    }
-
-    main {
-        margin: 25px auto;
-    }
+    .cards { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 30px; }
+    main { margin: 25px auto; }
+    header { gap: 10px; flex-wrap: wrap; }
 }
 </style>
 </head>
@@ -152,46 +118,102 @@ footer {
 
 <main>
 
-    <section class="hero">
-        <h1>Every doubt deserves a <span>voice.</span></h1>
-        <p>
-            Ask questions in the language you're comfortable with.<br>
-            Learn without hesitation.
-        </p>
-    </section>
+<section class="hero">
+    <h1>Every doubt deserves a <span>voice.</span></h1>
+    <p>Ask questions in the language you're comfortable with.<br>
+    Learn without hesitation.</p>
+</section>
 
-    <section class="cards">
+<section class="cards">
 
-        <div class="card">
-            <div class="icon">🎓</div>
-            <h2>I'm a Student</h2>
-            <p>
-                Join your classroom, speak or type your doubt
-                in your preferred language, and receive answers.
-            </p>
+    <div class="card">
+        <div class="icon">🎓</div>
+        <h2>I'm a Student</h2>
+        <p>Join your classroom and ask doubts in your preferred language.</p>
 
-            <input type="text" placeholder="Enter your class code">
-            <button>Join Classroom</button>
-        </div>
+        <input id="classCode" type="text" placeholder="Enter your class code">
+        <button onclick="joinClass()">Join Classroom</button>
+        <div id="studentMessage" class="message"></div>
+    </div>
 
-        <div class="card teacher">
-            <div class="icon">👩‍🏫</div>
-            <h2>I'm a Teacher</h2>
-            <p>
-                Create a classroom, view student doubts,
-                identify common questions and respond to them.
-            </p>
+    <div class="card teacher">
+        <div class="icon">👩‍🏫</div>
+        <h2>I'm a Teacher</h2>
+        <p>Create a classroom and receive a code for your students.</p>
 
-            <button>Create a Classroom</button>
-        </div>
+        <input id="className" type="text" placeholder="Class name (e.g. Grade 9 Physics)">
+        <button onclick="createClass()">Create a Classroom</button>
+        <div id="teacherMessage" class="message"></div>
+    </div>
 
-    </section>
-
+</section>
 </main>
 
-<footer>
-    AskAloud · Inclusive learning for everyone
-</footer>
+<footer>AskAloud · Inclusive learning for everyone</footer>
+
+<script>
+async function createClass() {
+    const name = document.getElementById("className").value.trim();
+    const message = document.getElementById("teacherMessage");
+
+    if (!name) {
+        message.innerText = "Please enter a class name first.";
+        return;
+    }
+
+    message.innerText = "Creating classroom...";
+
+    try {
+        const response = await fetch("/api/classes", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({name: name})
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            message.innerText = data.error || "Could not create classroom.";
+            return;
+        }
+
+        message.innerHTML =
+            "Classroom created successfully!<br>" +
+            "Share this code with your students:" +
+            '<div class="class-code">' + data.code + '</div>' +
+            "<strong>" + data.name + "</strong>";
+    } catch (error) {
+        message.innerText = "Could not connect to the server. The app may not be running yet.";
+    }
+}
+
+async function joinClass() {
+    const code = document.getElementById("classCode").value.trim().toUpperCase();
+    const message = document.getElementById("studentMessage");
+
+    if (!code) {
+        message.innerText = "Please enter your class code.";
+        return;
+    }
+
+    message.innerText = "Checking class code...";
+
+    try {
+        const response = await fetch("/api/classes/" + encodeURIComponent(code));
+        const data = await response.json();
+
+        if (!response.ok) {
+            message.innerText = data.error || "Class not found.";
+            return;
+        }
+
+        message.innerText = "Successfully joined: " + data.name + 
+                            " (Class code: " + data.code + ")";
+    } catch (error) {
+        message.innerText = "Could not connect to the server. The app may not be running yet.";
+    }
+}
+</script>
 
 </body>
 </html>
