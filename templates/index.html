@@ -1,19 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AskAloud</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AskAloud</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #243047;
+}
+
+header {
+    padding: 22px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #6254d9;
+}
+
+.tag {
+    color: #777;
+    font-size: 13px;
+}
+
+main {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.hero span {
+    color: #6254d9;
+}
+
+.hero p {
+    color: #697386;
+    line-height: 1.6;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+}
+
+.icon {
+    font-size: 32px;
+    margin-bottom: 18px;
+}
+
+.card h2 {
+    margin-bottom: 12px;
+}
+
+.card p {
+    color: #697386;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #dce1eb;
+    border-radius: 9px;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    background: #6254d9;
+    color: white;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #5042c2;
+}
+
+.teacher {
+    background: #f0edff;
+}
+
+footer {
+    text-align: center;
+    color: #8a91a0;
+    font-size: 13px;
+    padding: 30px;
+}
+
+@media (max-width: 650px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    main {
+        margin: 25px auto;
+    }
+}
+</style>
 </head>
+
 <body>
-    <h1>AskAloud</h1>
-    <p>Ask your doubts in your own language.</p>
 
-    <h2>Student</h2>
-    <input type="text" placeholder="Enter your class code">
-    <button>Join Class</button>
+<header>
+    <div class="logo">🔊 AskAloud</div>
+    <div class="tag">Learning without language barriers</div>
+</header>
 
-    <h2>Teacher</h2>
-    <button>Create a Class</button>
+<main>
+
+    <section class="hero">
+        <h1>Every doubt deserves a <span>voice.</span></h1>
+        <p>
+            Ask questions in the language you're comfortable with.<br>
+            Learn without hesitation.
+        </p>
+    </section>
+
+    <section class="cards">
+
+        <div class="card">
+            <div class="icon">🎓</div>
+            <h2>I'm a Student</h2>
+            <p>
+                Join your classroom, speak or type your doubt
+                in your preferred language, and receive answers.
+            </p>
+
+            <input type="text" placeholder="Enter your class code">
+            <button>Join Classroom</button>
+        </div>
+
+        <div class="card teacher">
+            <div class="icon">👩‍🏫</div>
+            <h2>I'm a Teacher</h2>
+            <p>
+                Create a classroom, view student doubts,
+                identify common questions and respond to them.
+            </p>
+
+            <button>Create a Classroom</button>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    AskAloud · Inclusive learning for everyone
+</footer>
+
 </body>
 </html>
