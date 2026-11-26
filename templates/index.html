@@ -1,219 +1,384 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AskAloud</title>
-
+<title>AskAloud | Classroom of Questions</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-    font-family: Arial, sans-serif;
-    background: #f5f7fb;
-    color: #243047;
-}
-
-header {
-    padding: 22px 8%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-}
-
-.logo { font-size: 24px; font-weight: bold; color: #6254d9; }
-.tag { color: #777; font-size: 13px; }
-
-main { max-width: 900px; margin: 50px auto; padding: 20px; }
-
-.hero { text-align: center; margin-bottom: 40px; }
-.hero h1 { font-size: 38px; margin-bottom: 15px; }
-.hero span { color: #6254d9; }
-.hero p { color: #697386; line-height: 1.6; }
-
-.cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-}
-
-.card {
-    background: white;
-    border-radius: 18px;
-    padding: 30px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.04);
-}
-
-.teacher { background: #f0edff; }
-.icon { font-size: 32px; margin-bottom: 18px; }
-.card h2 { margin-bottom: 12px; }
-.card p {
-    color: #697386;
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 22px;
-}
-
-input {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #dce1eb;
-    border-radius: 9px;
-    margin-bottom: 12px;
-    font-size: 15px;
-}
-
-button {
-    width: 100%;
-    padding: 13px;
-    background: #6254d9;
-    color: white;
-    border: none;
-    border-radius: 9px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-button:hover { background: #5042c2; }
-
-.message {
-    margin-top: 15px;
-    font-size: 14px;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-}
-
-.class-code {
-    font-size: 28px;
-    font-weight: bold;
-    letter-spacing: 4px;
-    color: #6254d9;
-    margin: 12px 0;
-}
-
-footer {
-    text-align: center;
-    color: #8a91a0;
-    font-size: 13px;
-    padding: 30px;
-}
-
-@media (max-width: 650px) {
-    .cards { grid-template-columns: 1fr; }
-    .hero h1 { font-size: 30px; }
-    main { margin: 25px auto; }
-    header { gap: 10px; flex-wrap: wrap; }
-}
+*{box-sizing:border-box}
+body{margin:0;background:#f5f6fb;color:#25243a;font-family:Arial,sans-serif}
+header{background:#6558d9;color:white;padding:22px 20px}
+header h1{margin:0;font-size:27px}
+header p{margin:8px 0 0;opacity:.9}
+main{max-width:800px;margin:24px auto;padding:0 15px}
+.card{background:white;padding:22px;border-radius:18px;margin-bottom:18px;box-shadow:0 4px 20px #2020400a}
+h2{margin-top:0}
+input,textarea,select,button{font:inherit;width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #ddd}
+textarea{min-height:100px;resize:vertical}
+button{border:none;background:#6558d9;color:white;font-weight:bold;cursor:pointer}
+button.secondary{background:#eee;color:#333}
+button:disabled{opacity:.5}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.hidden{display:none!important}
+.small{font-size:13px;color:#777}
+.tag{display:inline-block;background:#eeecff;color:#6558d9;padding:5px 9px;border-radius:20px;font-size:12px}
+.doubt{border:1px solid #eee;padding:12px;border-radius:12px;margin:10px 0}
+.answer{background:#f0fff6;border-left:4px solid #35a76e;padding:12px;border-radius:8px;margin-top:10px}
+.notice{padding:12px;background:#fff7e8;border-radius:10px;font-size:13px}
+.status{margin:8px 0;font-size:14px}
+footer{text-align:center;color:#888;padding:25px;font-size:12px}
 </style>
 </head>
 
 <body>
-
 <header>
-    <div class="logo">🔊 AskAloud</div>
-    <div class="tag">Learning without language barriers</div>
+<h1>💬 AskAloud</h1>
+<p>A classroom where every question deserves a voice.</p>
 </header>
 
 <main>
+<div class="card" id="home">
+<h2>Welcome!</h2>
+<p>Ask your doubts in a language you are comfortable with, without worrying about speaking in front of everyone.</p>
+<div class="row">
+<button onclick="show('student')">I'm a Student</button>
+<button onclick="show('teacher')">I'm a Teacher</button>
+</div>
+<p class="small">Demo languages: Malayalam, Hindi and English.</p>
+</div>
 
-<section class="hero">
-    <h1>Every doubt deserves a <span>voice.</span></h1>
-    <p>Ask questions in the language you're comfortable with.<br>
-    Learn without hesitation.</p>
-</section>
+<div class="card hidden" id="student">
+<h2>Student Space</h2>
+<input id="studentCode" placeholder="Enter classroom code">
+<button onclick="joinClass()">Join Classroom</button>
+<div id="studentClass" class="hidden">
+<h3 id="studentClassName"></h3>
+<label>Language</label>
+<select id="language">
+<option value="ml">Malayalam</option>
+<option value="hi">Hindi</option>
+<option value="en">English</option>
+</select>
+<input id="studentName" placeholder="Name or nickname (optional)">
+<label><input type="checkbox" id="anonymous" style="width:auto"> Submit anonymously</label>
+<textarea id="doubtText" placeholder="Type your doubt here..."></textarea>
+<div class="row">
+<button onclick="startVoice()">🎙️ Speak</button>
+<button class="secondary" onclick="stopVoice()">Stop voice</button>
+</div>
+<button onclick="submitDoubt()">Submit Doubt</button>
+<div id="studentStatus" class="status"></div>
+<button class="secondary" onclick="loadMine()">Check My Answers</button>
+<div id="myAnswers"></div>
+</div>
+<button class="secondary" onclick="show('home')">Back</button>
+</div>
 
-<section class="cards">
-
-    <div class="card">
-        <div class="icon">🎓</div>
-        <h2>I'm a Student</h2>
-        <p>Join your classroom and ask doubts in your preferred language.</p>
-
-        <input id="classCode" type="text" placeholder="Enter your class code">
-        <button onclick="joinClass()">Join Classroom</button>
-        <div id="studentMessage" class="message"></div>
-    </div>
-
-    <div class="card teacher">
-        <div class="icon">👩‍🏫</div>
-        <h2>I'm a Teacher</h2>
-        <p>Create a classroom and receive a code for your students.</p>
-
-        <input id="className" type="text" placeholder="Class name (e.g. Grade 9 Physics)">
-        <button onclick="createClass()">Create a Classroom</button>
-        <div id="teacherMessage" class="message"></div>
-    </div>
-
-</section>
+<div class="card hidden" id="teacher">
+<h2>Teacher Space</h2>
+<p>Create a classroom or open your teacher dashboard.</p>
+<input id="className" placeholder="Classroom name (e.g. Physics 10A)">
+<button onclick="createClass()">Create Classroom</button>
+<div id="createdInfo" class="notice hidden"></div>
+<hr>
+<input id="teacherCode" placeholder="Classroom code">
+<input id="teacherKey" placeholder="Teacher access key">
+<button onclick="openTeacher()">Open Dashboard</button>
+<button class="secondary" onclick="show('home')">Back</button>
+<div id="teacherDashboard"></div>
+</div>
 </main>
 
-<footer>AskAloud · Inclusive learning for everyone</footer>
+<footer>AskAloud · Inclusive Education Prototype</footer>
 
 <script>
-async function createClass() {
-    const name = document.getElementById("className").value.trim();
-    const message = document.getElementById("teacherMessage");
+let currentCode = "";
+let currentSID = sessionStorage.getItem("askaloud_sid");
 
-    if (!name) {
-        message.innerText = "Please enter a class name first.";
-        return;
-    }
-
-    message.innerText = "Creating classroom...";
-
-    try {
-        const response = await fetch("/api/classes", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name: name})
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            message.innerText = data.error || "Could not create classroom.";
-            return;
-        }
-
-        message.innerHTML =
-            "Classroom created successfully!<br>" +
-            "Share this code with your students:" +
-            '<div class="class-code">' + data.code + '</div>' +
-            "<strong>" + data.name + "</strong>";
-    } catch (error) {
-        message.innerText = "Could not connect to the server. The app may not be running yet.";
-    }
+if(!currentSID){
+  currentSID = "student-" + Math.random().toString(36).slice(2);
+  sessionStorage.setItem("askaloud_sid",currentSID);
 }
 
-async function joinClass() {
-    const code = document.getElementById("classCode").value.trim().toUpperCase();
-    const message = document.getElementById("studentMessage");
+let teacherCodeSaved = "";
+let teacherKeySaved = "";
 
-    if (!code) {
-        message.innerText = "Please enter your class code.";
-        return;
-    }
-
-    message.innerText = "Checking class code...";
-
-    try {
-        const response = await fetch("/api/classes/" + encodeURIComponent(code));
-        const data = await response.json();
-
-        if (!response.ok) {
-            message.innerText = data.error || "Class not found.";
-            return;
-        }
-
-        message.innerText = "Successfully joined: " + data.name + 
-                            " (Class code: " + data.code + ")";
-    } catch (error) {
-        message.innerText = "Could not connect to the server. The app may not be running yet.";
-    }
+function show(id){
+  ["home","student","teacher"].forEach(x=>{
+    document.getElementById(x).classList.add("hidden");
+  });
+  document.getElementById(id).classList.remove("hidden");
 }
+
+async function api(url,options={}){
+  const res=await fetch(url,{
+    headers:{"Content-Type":"application/json"},
+    ...options
+  });
+  const data=await res.json();
+  if(!res.ok) throw new Error(data.error||"Something went wrong.");
+  return data;
+}
+
+async function joinClass(){
+  const code=document.getElementById("studentCode").value.trim().toUpperCase();
+  if(!code){alert("Enter a classroom code.");return;}
+
+  try{
+    const data=await api("/api/classes/"+encodeURIComponent(code));
+    currentCode=code;
+    document.getElementById("studentClassName").textContent=data.name;
+    document.getElementById("studentClass").classList.remove("hidden");
+    document.getElementById("studentStatus").textContent="You joined "+data.name;
+  }catch(e){alert(e.message);}
+}
+
+async function createClass(){
+  const name=document.getElementById("className").value.trim();
+  if(!name){alert("Enter a classroom name.");return;}
+
+  try{
+    const data=await api("/api/classes",{
+      method:"POST",
+      body:JSON.stringify({name})
+    });
+
+    teacherCodeSaved=data.code;
+    teacherKeySaved=data.teacher_key;
+
+    document.getElementById("createdInfo").classList.remove("hidden");
+    document.getElementById("createdInfo").innerHTML=
+      "<b>Classroom created!</b><br>Class code: <b>"+data.code+
+      "</b><br>Teacher access key:<br><code>"+data.teacher_key+
+      "</code><br><br>Save this key privately. It cannot be recovered.";
+    document.getElementById("teacherCode").value=data.code;
+    document.getElementById("teacherKey").value=data.teacher_key;
+    openTeacher();
+  }catch(e){alert(e.message);}
+}
+
+async function submitDoubt(){
+  const text=document.getElementById("doubtText").value.trim();
+  if(!currentCode){alert("Join a classroom first.");return;}
+  if(!text){alert("Type or speak your doubt first.");return;}
+
+  const payload={
+    code:currentCode,
+    sid:currentSID,
+    text,
+    lang:document.getElementById("language").value,
+    student:document.getElementById("studentName").value.trim()||"Student",
+    anon:document.getElementById("anonymous").checked
+  };
+
+  try{
+    const data=await api("/api/doubts",{
+      method:"POST",
+      body:JSON.stringify(payload)
+    });
+    document.getElementById("doubtText").value="";
+    document.getElementById("studentStatus").textContent=data.message;
+    loadMine();
+  }catch(e){
+    document.getElementById("studentStatus").textContent=e.message;
+  }
+}
+
+async function loadMine(){
+  if(!currentCode)return;
+  try{
+    const data=await api("/api/mine/"+encodeURIComponent(currentCode)+"/"+encodeURIComponent(currentSID));
+    const box=document.getElementById("myAnswers");
+    box.innerHTML="<h3>Your Doubts & Answers</h3>";
+
+    if(!data.length){
+      box.innerHTML+="<p class='small'>You haven't submitted any doubts yet.</p>";
+      return;
+    }
+
+    data.reverse().forEach(d=>{
+      const div=document.createElement("div");
+      div.className="doubt";
+      div.innerHTML="<b>Your doubt</b><p></p>";
+      div.querySelector("p").textContent=d.text;
+
+      if(d.answer){
+        const ans=document.createElement("div");
+        ans.className="answer";
+        const label=document.createElement("b");
+        label.textContent="Teacher's answer";
+        const content=document.createElement("p");
+        content.textContent=d.translated_answer||d.answer;
+        ans.append(label,content);
+
+        const helpful=document.createElement("button");
+        helpful.textContent="Helpful";
+        helpful.onclick=()=>sendFeedback(d.group,"helpful");
+
+        const confused=document.createElement("button");
+        confused.className="secondary";
+        confused.textContent="Still confused";
+        confused.onclick=()=>sendFeedback(d.group,"still-confused");
+
+        ans.append(helpful,confused);
+        div.append(ans);
+      }else{
+        const waiting=document.createElement("p");
+        waiting.className="small";
+        waiting.textContent="Waiting for teacher's answer.";
+        div.append(waiting);
+      }
+      box.append(div);
+    });
+  }catch(e){
+    document.getElementById("myAnswers").textContent=e.message;
+  }
+}
+
+async function sendFeedback(group,value){
+  try{
+    await api("/api/feedback",{
+      method:"POST",
+      body:JSON.stringify({
+        code:currentCode,
+        sid:currentSID,
+        group,
+        value
+      })
+    });
+    alert("Thank you for your feedback!");
+  }catch(e){alert(e.message);}
+}
+
+async function openTeacher(){
+  const code=document.getElementById("teacherCode").value.trim().toUpperCase();
+  const key=document.getElementById("teacherKey").value.trim();
+
+  if(!code||!key){alert("Enter the class code and teacher access key.");return;}
+
+  teacherCodeSaved=code;
+  teacherKeySaved=key;
+  await refreshTeacher();
+}
+
+async function refreshTeacher(){
+  if(!teacherCodeSaved||!teacherKeySaved)return;
+
+  try{
+    const data=await api("/api/teacher/"+encodeURIComponent(teacherCodeSaved),{
+      method:"POST",
+      body:JSON.stringify({teacher_key:teacherKeySaved})
+    });
+
+    const box=document.getElementById("teacherDashboard");
+    box.innerHTML="<h3>"+escapeHtml(data.name)+" · "+data.code+"</h3>";
+
+    if(!data.groups.length){
+      box.innerHTML+="<p class='small'>No doubts yet. Student questions will appear here.</p>";
+      return;
+    }
+
+    data.groups.forEach(g=>{
+      const div=document.createElement("div");
+      div.className="doubt";
+      div.innerHTML="<span class='tag'>"+g.count+" student question(s)</span><h3></h3>";
+      div.querySelector("h3").textContent=g.title;
+
+      g.doubts.forEach(d=>{
+        const p=document.createElement("p");
+        p.textContent=(d.student||"Student")+" · "+d.lang+": "+d.text;
+        div.append(p);
+      });
+
+      if(g.answer){
+        const ans=document.createElement("div");
+        ans.className="answer";
+        ans.textContent="Current answer: "+g.answer;
+        div.append(ans);
+      }
+
+      const textarea=document.createElement("textarea");
+      textarea.placeholder="Write an answer for this group of doubts...";
+      textarea.value=g.answer||"";
+
+      const button=document.createElement("button");
+      button.textContent=g.answer?"Update Answer":"Send Answer";
+      button.onclick=async()=>{
+        try{
+          await api("/api/answer",{
+            method:"POST",
+            body:JSON.stringify({
+              code:teacherCodeSaved,
+              teacher_key:teacherKeySaved,
+              group:g.id,
+              answer:textarea.value
+            })
+          });
+          alert("Answer saved!");
+          refreshTeacher();
+        }catch(e){alert(e.message);}
+      };
+
+      div.append(textarea,button);
+      box.append(div);
+    });
+  }catch(e){
+    document.getElementById("teacherDashboard").textContent=e.message;
+  }
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+let recognition=null;
+
+function startVoice(){
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    alert("Voice input isn't supported in this browser. Please type your doubt.");
+    return;
+  }
+
+  recognition=new SpeechRecognition();
+  recognition.lang={
+    ml:"ml-IN",
+    hi:"hi-IN",
+    en:"en-IN"
+  }[document.getElementById("language").value]||"en-IN";
+
+  recognition.interimResults=true;
+  recognition.continuous=true;
+
+  recognition.onresult=(event)=>{
+    let transcript="";
+    for(let i=0;i<event.results.length;i++){
+      transcript+=event.results[i][0].transcript;
+    }
+    document.getElementById("doubtText").value=transcript;
+  };
+
+  recognition.onerror=(event)=>{
+    document.getElementById("studentStatus").textContent=
+      "Voice recognition error: "+event.error+". You can type instead.";
+  };
+
+  recognition.start();
+}
+
+function stopVoice(){
+  if(recognition){
+    recognition.stop();
+    recognition=null;
+  }
+}
+
 </script>
-
 </body>
 </html>
